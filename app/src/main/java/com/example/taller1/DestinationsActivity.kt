@@ -67,7 +67,10 @@ class DestinationsActivity : AppCompatActivity() {
     private fun filterDestinationsByCategory(destinations: List<Destination>, category: String): List<Destination> {
         return if (category == "Todos") {
             destinations
-        } else {
+        } else if (category == "favorites") {
+            FavoritesStore.getFavorites()
+        }
+        else {
             destinations.filter { it.categoria == category }
         }
     }

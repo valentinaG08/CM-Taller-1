@@ -13,9 +13,13 @@ import android.widget.EditText
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
+import com.example.taller1.BuildConfig
 import com.example.taller1.DestinationsActivity
+import com.example.taller1.DetailsActivity
+import com.example.taller1.FavoritesStore
 import com.example.taller1.R
-
+import com.example.taller1.utils.APIUtil
+import com.google.gson.Gson
 
 class MainActivity : AppCompatActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,11 +44,26 @@ class MainActivity : AppCompatActivity(){
         }
 
         btnFavorites.setOnClickListener {
-            // Abre la actividad de favoritos
+
+            if (FavoritesStore.getFavorites().size == 0) Toast.makeText(this, "No tienes ningún favorito", Toast.LENGTH_LONG).show()
+            else {
+                val intent = Intent(this, DestinationsActivity::class.java)
+                intent.putExtra("category", "favorites")
+                startActivity(intent)
+            }
         }
 
         btnRecommendations.setOnClickListener {
-            // Abre la actividad de recomendaciones
+            val favorites = FavoritesStore.getMostFrequentCategory();
+            favorites.shuffle();
+
+            if (favorites.size == 0) {
+                Toast.makeText(this, "No tienes ningún favorito", Toast.LENGTH_LONG).show()
+            } else {
+                val intent = Intent(this, DetailsActivity::class.java)
+                intent.putExtra("destination", Gson().toJson(favorites[0]))
+                startActivity(intent)
+            }
         }
 
         spinnerCategory.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {

@@ -1,21 +1,58 @@
 package com.example.taller1
 
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.taller1.utils.APIUtil
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import android.graphics.Color
+import android.view.View
+import kotlin.properties.Delegates
 
 class DetailsActivity : AppCompatActivity() {
+
+    private lateinit var destination: Destination
+    private lateinit var btnAddToFavorites : Button
+    private var foundFavorites : Boolean = false
+
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_details)
 
         // Obtiene la información del destino desde el intent
         val destinationJson = intent.getStringExtra("destination")
-        val destination = Gson().fromJson<Destination>(destinationJson, Destination::class.java)
+        destination = Gson().fromJson<Destination>(destinationJson, Destination::class.java)
+
+        val api = APIUtil()
+        api.init(this)
+        val queries : HashMap<String, String> = HashMap()
+        val headers : HashMap<String, String> = HashMap()
+        queries["key"] = BuildConfig.API_KEY
+        queries["q"] = destination.pais
+        headers["Content-Type"] = "application/json"
+
+        val celcius = findViewById<TextView>(R.id.tvCelcius)
+        val celciusFeel = findViewById<TextView>(R.id.tvCelciusFeel)
+
+        api.makeAPICall(
+            null,
+            queries,
+            headers,
+            "https://api.weatherapi.com/v1/current.json",
+            {
+                Log.i("REQUEST SUCCESS", it.toString())
+                celcius.text = "Temperatura C° ${it.current.temp_c}"
+                celciusFeel.text = "Sensación termica C° ${it.current.feelslike_c}"
+            },
+            {
+                Log.i("REQUEST Failed", "NOOOOO")
+            }
+        )
 
         // Muestra la informacion en las vistas
         val tvName = findViewById<TextView>(R.id.tvDestinationName)
@@ -33,17 +70,41 @@ class DetailsActivity : AppCompatActivity() {
         tvPrice.text = "Precio: ${destination?.precio}"
 
         // Añade a favoritos
-        val btnAddToFavorites: Button = findViewById(R.id.btnAddToFavorites)
+        btnAddToFavorites= findViewById(R.id.btnAddToFavorites)
+        foundFavorites = FavoritesStore.searchFavorite(destination.id)
+        toggleFavoriteMode()
         btnAddToFavorites.setOnClickListener {
-            addToFavorites(destination?.nombre)
+            addToFavorites(destination.nombre)
         }
     }
 
     private fun addToFavorites(destinationName: String?) {
-        if (destinationName != null) {
-            // SharedPreferences, Base de Datos, u otras formas de almacenamiento
-            // Solo se muestra un Toast
-            Toast.makeText(this, "Añadido a favoritos", Toast.LENGTH_SHORT).show()
+        if (destinationName != null && !foundFavorites) {
+            if (FavoritesStore.addFavorite(destination)) {
+                Toast.makeText(this, "Añadido a favoritos", Toast.LENGTH_SHORT).show()
+                foundFavorites = true
+                toggleFavoriteMode()
+            }
+            else Toast.makeText(this, "Sucedió algo añadiendo el favorito", Toast.LENGTH_SHORT).show()
+
+        } else if (foundFavorites) {
+            if (FavoritesStore.deleteFavorite(destination.id)) {
+                Toast.makeText(this, "Tu favorito fue eliminado", Toast.LENGTH_SHORT).show()
+                foundFavorites = false
+                toggleFavoriteMode()
+            }
+            else Toast.makeText(this, "Sucedió algo eliminando el favorito", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun toggleFavoriteMode() {
+        Log.i("FAV", foundFavorites.toString())
+        if (foundFavorites) {
+            btnAddToFavorites.setBackgroundColor(Color.RED)
+            btnAddToFavorites.text = "Eliminar de favoritos"
+        } else {
+            btnAddToFavorites.setBackgroundColor(Color.GREEN)
+            btnAddToFavorites.text = "Agregar a favoritos"
         }
     }
 }

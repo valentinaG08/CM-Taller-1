@@ -1,11 +1,20 @@
+import java.io.FileInputStream
+import java.util.Properties
+import com.android.build.api.variant.BuildConfigField
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
 }
 
+val apikeyPropertiesFile = rootProject.file("apikey.properties")
+val apikeyProperties = Properties()
+apikeyProperties.load(FileInputStream(apikeyPropertiesFile))
+
 android {
     namespace = "com.example.taller1"
     compileSdk = 34
+
 
     defaultConfig {
         applicationId = "com.example.taller1"
@@ -35,6 +44,15 @@ android {
     }
 }
 
+androidComponents {
+    onVariants {
+        it.buildConfigFields.put(
+            "API_KEY", BuildConfigField("String", apikeyProperties.getProperty("API_KEY"), "")
+        )
+    }
+}
+
+
 dependencies {
 
     implementation("androidx.core:core-ktx:1.12.0")
@@ -45,4 +63,5 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     implementation("com.google.code.gson:gson:2.10")
+    implementation("com.android.volley:volley:1.2.1")
 }

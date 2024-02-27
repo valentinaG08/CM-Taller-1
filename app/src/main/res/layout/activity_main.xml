@@ -8,42 +8,41 @@
 
     <Spinner
         android:id="@+id/spinnerCategory"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
+        android:layout_above="@id/btnExplore"
         android:entries="@array/categorias_viajes"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_centerHorizontal="true"
+        />
 
     <Button
         android:id="@+id/btnExplore"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/spinnerCategory"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="10dp"
         android:text="Explorar Destinos"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        android:layout_above="@id/btnFavorites"
+        />
 
     <Button
         android:id="@+id/btnFavorites"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/btnExplore"
-        android:layout_marginTop="16dp"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="10dp"
         android:text="Favoritos"
         android:layout_centerHorizontal="true"/>
 
     <Button
         android:id="@+id/btnRecommendations"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/btnFavorites"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="10dp"
         android:text="Recomendaciones"
         android:layout_centerHorizontal="true"/>
 </RelativeLayout>
