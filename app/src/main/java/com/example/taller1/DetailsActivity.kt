@@ -100,8 +100,9 @@ class DetailsActivity : AppCompatActivity() {
     private fun toggleFavoriteMode() {
         Log.i("FAV", foundFavorites.toString())
         if (foundFavorites) {
-            btnAddToFavorites.setBackgroundColor(Color.RED)
-            btnAddToFavorites.text = "Eliminar de favoritos"
+            btnAddToFavorites.isEnabled = false
+            btnAddToFavorites.setBackgroundColor(Color.GRAY)
+            btnAddToFavorites.text = "Ya agregaste este destino"
         } else {
             btnAddToFavorites.setBackgroundColor(Color.GREEN)
             btnAddToFavorites.text = "Agregar a favoritos"
