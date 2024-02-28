@@ -3,4 +3,7 @@
 - Sebastian Felipe Galindo
 - Daniel Alfredo Vidal
 
-  Grupo: La mesa redonda
+  Grupo: La Mesa Redonda
+
+  Link Del Video:
+  
