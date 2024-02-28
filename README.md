@@ -2,3 +2,5 @@
 - Valentina Garcia Alfonso
 - Sebastian Felipe Galindo
 - Daniel Alfredo Vidal
+
+  Grupo: La mesa redonda
